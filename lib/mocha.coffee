@@ -1,6 +1,6 @@
 exec = require './exec'
 
-module.exports.test = (callback) ->
+test = (callback) ->
   options = [
     '--compilers', 'coffee:coffee-script'
     '--colors',
@@ -8,3 +8,17 @@ module.exports.test = (callback) ->
   ]
 
   exec.node('mocha', options, callback)
+
+watch = (callback) ->
+  options = [
+    '--compilers', 'coffee:coffee-script'
+    '--colors',
+    '-R', 'spec',
+    '-w'
+  ]
+
+  exec.node('mocha', options, callback)
+
+module.exports =
+  test:   test
+  watch:  watch

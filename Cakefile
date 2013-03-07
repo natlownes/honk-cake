@@ -1,3 +1,1 @@
-honkCake = require './lib/index'
-
-honkCake.all()
+require('./lib/index').all()
