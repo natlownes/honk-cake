@@ -1,8 +1,7 @@
 mocha = require './mocha'
 
 all = (callback) ->
-  task 'test',        'Run all Mocha tests', -> mocha.test(callback)
-  task 'test:watch',  'Run all Mocha tests, watching for changes', -> mocha.watch(callback)
+  mocha.all()
 
 module.exports =
   all:    all

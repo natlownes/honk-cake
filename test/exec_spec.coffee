@@ -32,11 +32,11 @@ describe 'Exec', ->
         .then (result) ->
           expect(result.status).to.equal 0
           done()
-        .end()
+        .done()
 
     it 'should return the stdout of a proc', (done) ->
       exec.bin('echo', ['-en', 'pants town'], echo: false)
         .then (result) ->
           expect(result.stdout).to.equal 'pants town'
           done()
-        .end()
+        .done()

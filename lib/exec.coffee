@@ -1,7 +1,7 @@
 {spawn, exec} = require 'child_process'
 
-_         = require 'lodash'
-deferred  = require 'deferred'
+_ = require 'lodash'
+Q = require 'q'
 
 
 # Full-resolve a binary installed by [npm](https://npmjs.org). As noted
@@ -27,25 +27,25 @@ bin = (cmd, args, opts) ->
   defaults =
     echo:   true
 
-  opts  = _.extend(defaults, opts)
-  def   = deferred()
-  proc  = spawn cmd, args, expandedEnv()
+  opts    = _.extend(defaults, opts)
+  def     = Q.defer()
+  proc    = spawn cmd, args, expandedEnv()
+  stdout  = ''
+  stderr  = ''
 
   if opts.echo
     proc.stdout.pipe(process.stdout)
     proc.stderr.pipe(process.stderr)
-    proc.on 'exit', (status) -> def.resolve(status: status)
-
   else
-    stdout = ''
-    stderr = ''
     proc.stdout.on 'data', (s) -> stdout += s
     proc.stderr.on 'data', (s) -> stderr += s
-    proc.on 'exit', (status) ->
-      def.resolve
-        status: status
-        stdout: stdout
-        stderr: stderr
+
+  proc.on 'close', (exitCode) ->
+    result =
+      status:   exitCode
+      stdout:   stdout
+      stderr:   stderr
+    if exitCode is 0 then def.resolve(result) else def.reject(result)
 
   return def.promise
 

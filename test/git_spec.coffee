@@ -14,22 +14,38 @@ describe 'Git helpers', ->
 
   afterEach (done) ->
     exec.bin('rm', ['-rf', @root])
-      .then -> done()
-      .end()
+      .then ->
+        done()
+      .done()
 
   it 'should create an empty repo', (done) ->
-    dir = "#{@root}/git-init-test"
-    git.init(dir).then (result) ->
+    dir  = "#{@root}/init"
+    git.init(dir).then (result) =>
       expect(result.status).to.equal 0
       expect(result.stdout).to.equal "Initialized empty Git repository in #{dir}/.git/\n"
       done()
-    .end()
+    .done()
 
   it 'should determine a branch name', (done) ->
-    dir = "#{@root}/git-init-test"
+    # TODO: This will actually give you the branch name of the current
+    #       directory. Classic!
+    dir  = "#{@root}/branch-name"
     git.init(dir)
       .then -> git.branchName(dir)
-      .then (name)->
+      .then (name) ->
         expect(name).to.equal 'master'
         done()
-      .end()
+      .done()
+
+  it 'should checkout a branch'
+  # it 'should checkout a branch', (done) ->
+  #   dir = @dir
+  #   git.init(dir)
+  #     .then -> git.branchName(dir)
+  #     .then (name) ->
+  #       expect(name).to.equal 'master'
+  #       git.checkout('-b', 'gh-pages')
+  #     .then (result) ->
+  #       console.log result
+  #       done()
+  #     .end()

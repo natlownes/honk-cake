@@ -17,6 +17,10 @@ branchName = (path) ->
   git(args, echo: false).then (result) ->
     result.stdout.split('\n')[0]
 
+checkout = (args...) ->
+  git(['checkout'].concat(args), echo: false)
+
 module.exports =
   init:       init
   branchName: branchName
+  checkout:   checkout
