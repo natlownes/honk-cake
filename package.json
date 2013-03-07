@@ -1,0 +1,18 @@
+{
+  "name":     "honk-cake",
+  "version":  "0.0.0",
+  "main":     "./lib/index.coffee",
+  "dependencies": {
+    "coffee-script":  ">= 1.5.0",
+    "jqueryify":      "1.9.1"
+  },
+  "devDependencies": {
+    "mocha":          "1.8.1",
+    "chai":           "1.5.0",
+    "temp":           "0.5.0",
+    "lodash":         "1.0.1"
+  },
+  "scripts": {
+    "test":           "cake test"
+  }
+}
