@@ -45,6 +45,7 @@ bin = (cmd, args, opts) ->
       status:   exitCode
       stdout:   stdout
       stderr:   stderr
+      cmd:      [cmd].concat(args).join(' ')
     if exitCode is 0 then def.resolve(result) else def.reject(result)
 
   return def.promise

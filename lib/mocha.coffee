@@ -1,16 +1,29 @@
+# Tasks to help with a [Mocha](http://visionmedia.github.com/mocha/) project. By
+# default, it is assumed that tests live in `./test/`, though the option can be
+# overriden.
+#
+# By default, it's assumed that the test root is `./test/` and the reporter of
+# choice is `spec`.
+
+#
 exec = require './exec'
 
-test = (files) ->
+
+# Fork mocha to run the test suite. Mocha must be present in
+# `./node_modules/.bin`. Std(in|out) will be piped to the parent process
+test = (files, reporter='spec') ->
   args = [
     '--compilers', 'coffee:coffee-script'
     '--colors',
-    '-R', 'spec',
+    '-R', reporter
     files
   ]
 
   exec.node('mocha', args)
 
 
+# Use mocha's built in watch capabilities to trigger a test run when it a file
+# changes.
 watch = (files) ->
   args = [
     '--compilers', 'coffee:coffee-script'
@@ -22,14 +35,21 @@ watch = (files) ->
 
   exec.node('mocha', args)
 
-all = ->
+
+# Load all of the Mocha tasks. If a root or spec is provided, they will be used
+# for all applicable tasks. The executed tests can be limited in scope by
+# providing a `--files` flag to cake (which will be exposed when this function
+# is invoked).
+all = (root='./test/', reporter='spec') ->
   option '-f', '--files [FILES]', 'select which file to run tests for'
+  files = (opts) -> opts.files or root
 
   task 'test', 'Run all Mocha tests', (opts) ->
-    test(opts.files or './test/')
+    test(files(opts), reporter=reporter)
 
   task 'test:watch', 'Run all Mocha tests, watching for changes', (opts) ->
-    watch(opts.files or './test/')
+    watch(files(opts), reporter=reporter)
+
 
 module.exports =
   all:    all
