@@ -15,6 +15,7 @@ test = (files, reporter='spec') ->
   args = [
     '--compilers', 'coffee:coffee-script'
     '--colors',
+    '--recursive',
     '-R', reporter
     files
   ]
@@ -28,6 +29,7 @@ watch = (files) ->
   args = [
     '--compilers', 'coffee:coffee-script'
     '--colors',
+    '--recursive',
     '-R', 'spec',
     '-w',
     files

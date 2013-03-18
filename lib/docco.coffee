@@ -49,7 +49,7 @@ publish = (srcRoot, branch, origin) ->
 
     docco("#{srcRoot}/lib", docRoot)
       .then(-> walkFiles(docRoot))
-      .then((files) ->
+      .then (files) ->
         git.init(docRoot)
           .then(-> srcGit(['config', '--get', "remote.#{origin}.url"], echo: false))
           .then((result) ->
@@ -60,7 +60,6 @@ publish = (srcRoot, branch, origin) ->
           .then(-> docGit(['add'].concat(files)))
           .then(-> docGit(['commit', '-m', 'Documentation update']))
           .then(-> docGit(['push', '--force', 'origin', branch], echo: false))
-      )
 
   # tmpDir().then (docRoot) ->
 
