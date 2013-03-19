@@ -22,6 +22,20 @@ test = (files, reporter='spec', opts) ->
 
   exec.node('mocha', args, opts)
 
+# Run mocha in "debug" mode -- this is slightly different than the "--debug"
+# flag which will allow a debugger to attach. Rather this will drop you in to
+# node's command line debugger during the test.
+debug = (files, reporter='spec', opts) ->
+  args = [
+    'debug'
+    '--compilers', 'coffee:coffee-script'
+    '--colors',
+    '--recursive',
+    '-R', reporter
+    files
+  ]
+  exec.node('mocha', args, opts)
+
 
 # Use mocha's built in watch capabilities to trigger a test run when it a file
 # changes.
@@ -49,8 +63,11 @@ all = (execOpts, root='./test/', reporter='spec') ->
   task 'test', 'Run all Mocha tests', (opts) ->
     test(files(opts), reporter=reporter, execOpts)
 
+  task 'test:debug', 'Run all Mocha tests with debugging enabled', (opts) ->
+    debug(files(opts), reporter=reporter, execOpts)
+
   task 'test:watch', 'Run all Mocha tests, watching for changes', (opts) ->
-    watch(files(opts), reporter=reporter, execOpts)
+    watch(files(opts), execOpts)
 
 
 module.exports =

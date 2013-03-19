@@ -37,6 +37,7 @@ bin = (cmd, args, opts) ->
   stderr  = ''
 
   if opts.echo
+    process.stdin.pipe(proc.stdin)
     proc.stdout.pipe(process.stdout)
     proc.stderr.pipe(process.stderr)
   else
@@ -53,6 +54,10 @@ bin = (cmd, args, opts) ->
 
   return def.promise
 
+debug = (cmd, args, opts) ->
+  args = ['debug', cmd].concat(args)
+  console.log "[DEBUG] node #{args.join(' ')}"
+  bin('node', args, opts)
 
 # Launch a binary installed by [npm](https://npmjs.org/). This will assume the
 # binary is available in `./node_modules/.bin/` and will flat-out fail if the
@@ -61,9 +66,13 @@ bin = (cmd, args, opts) ->
 node = (cmd, args, opts) ->
   bin(nodeBinary(cmd), args, opts)
 
+nodeDebug = (cmd, args, opts) ->
+  debug(nodeBinary(cmd), args, opts)
+
 
 module.exports =
   nodeBinary:   nodeBinary
   expandedEnv:  expandedEnv
   bin:          bin
   node:         node
+  nodeDebug:    nodeDebug
