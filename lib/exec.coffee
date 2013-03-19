@@ -1,7 +1,8 @@
 {spawn, exec} = require 'child_process'
 
-_ = require 'lodash'
-Q = require 'q'
+_     = require 'lodash'
+Q     = require 'q'
+path  = require 'path'
 
 
 # Full-resolve a binary installed by [npm](https://npmjs.org). As noted
@@ -13,12 +14,13 @@ nodeBinary = (name) ->
 
 # Adds manditory parameters to an existing environment. If no (or an empty)
 # environment is given, this will use the current process' environment.
-expandedEnv = (existing) ->
+expandedEnv = (paths=[], existing) ->
   env      = (existing or _.clone(process.env) or {})
   nodePath = env['NODE_PATH']?.split(':') or []
+  newPaths = (path.resolve(p) for p in paths).concat(nodePath)
 
   _.extend env,
-    NODE_PATH: ['./lib'].concat(nodePath).join(':')
+    NODE_PATH: newPaths.join(':')
 
 
 # Run a binary command from the path. The stdout and stderr of the forked
@@ -26,10 +28,11 @@ expandedEnv = (existing) ->
 bin = (cmd, args, opts) ->
   defaults =
     echo:   true
+    paths:  ['./lib']
 
   opts    = _.extend(defaults, opts)
   def     = Q.defer()
-  proc    = spawn cmd, args, expandedEnv()
+  proc    = spawn cmd, args, env: expandedEnv(opts.paths)
   stdout  = ''
   stderr  = ''
 

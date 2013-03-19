@@ -11,7 +11,7 @@ exec = require './exec'
 
 # Fork mocha to run the test suite. Mocha must be present in
 # `./node_modules/.bin`. Std(in|out) will be piped to the parent process
-test = (files, reporter='spec') ->
+test = (files, reporter='spec', opts) ->
   args = [
     '--compilers', 'coffee:coffee-script'
     '--colors',
@@ -20,12 +20,12 @@ test = (files, reporter='spec') ->
     files
   ]
 
-  exec.node('mocha', args)
+  exec.node('mocha', args, opts)
 
 
 # Use mocha's built in watch capabilities to trigger a test run when it a file
 # changes.
-watch = (files) ->
+watch = (files, opts) ->
   args = [
     '--compilers', 'coffee:coffee-script'
     '--colors',
@@ -35,22 +35,22 @@ watch = (files) ->
     files
   ]
 
-  exec.node('mocha', args)
+  exec.node('mocha', args, opts)
 
 
 # Load all of the Mocha tasks. If a root or spec is provided, they will be used
 # for all applicable tasks. The executed tests can be limited in scope by
 # providing a `--files` flag to cake (which will be exposed when this function
 # is invoked).
-all = (root='./test/', reporter='spec') ->
+all = (execOpts, root='./test/', reporter='spec') ->
   option '-f', '--files [FILES]', 'select which file to run tests for'
   files = (opts) -> opts.files or root
 
   task 'test', 'Run all Mocha tests', (opts) ->
-    test(files(opts), reporter=reporter)
+    test(files(opts), reporter=reporter, execOpts)
 
   task 'test:watch', 'Run all Mocha tests, watching for changes', (opts) ->
-    watch(files(opts), reporter=reporter)
+    watch(files(opts), reporter=reporter, execOpts)
 
 
 module.exports =

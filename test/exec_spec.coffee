@@ -17,13 +17,14 @@ describe 'Exec', ->
       expect(exec.nodeBinary('pants')).to.equal './node_modules/.bin/pants'
 
   describe 'expandedEnv', ->
-    it 'should add ./lib to the NODE_PATH', ->
-      env = {NODE_PATH: 'zip'}
-      expect(exec.expandedEnv(env)['NODE_PATH']).to.equal ('./lib:zip')
+    it 'should add expand and resolve paths in the node path', ->
+      expanded = "#{process.cwd()}/lib"
+      expect(exec.expandedEnv(['./lib'])['NODE_PATH']).to.equal (expanded)
 
     it 'should use the procs env when none is given', ->
       process.env['NODE_PATH'] = 'existing:bits'
-      expect(exec.expandedEnv()['NODE_PATH']).to.equal './lib:existing:bits'
+      expanded = "#{process.cwd()}/foo:existing:bits"
+      expect(exec.expandedEnv(['foo'])['NODE_PATH']).to.equal expanded
 
   describe 'bin', ->
 

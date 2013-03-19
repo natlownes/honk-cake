@@ -2,9 +2,9 @@ mocha = require './mocha'
 docco = require './docco'
 
 
-all = (callback) ->
-  mocha.all()
-  docco.all()
+all = (opts) ->
+  mocha.all(opts)
+  docco.all(opts)
 
 
 module.exports =
