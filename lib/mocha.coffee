@@ -50,7 +50,7 @@ all = (execOpts, root='./test/', reporter='spec') ->
     test(files(opts), reporter=reporter, execOpts)
 
   task 'test:watch', 'Run all Mocha tests, watching for changes', (opts) ->
-    watch(files(opts), reporter=reporter, execOpts)
+    watch(files(opts), execOpts)
 
 
 module.exports =
