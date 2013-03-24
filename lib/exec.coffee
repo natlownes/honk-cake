@@ -31,16 +31,18 @@ bin = (cmd, args, opts) ->
     paths:  ['./lib']
 
   opts    = _.extend(defaults, opts)
+  cmdOpts =
+    env:  expandedEnv(opts.paths)
+
+  if opts.echo
+    cmdOpts.stdio = 'inherit'
+
   def     = Q.defer()
-  proc    = spawn cmd, args, env: expandedEnv(opts.paths)
+  proc    = spawn cmd, args, cmdOpts
   stdout  = ''
   stderr  = ''
 
-  if opts.echo
-    process.stdin.pipe(proc.stdin)
-    proc.stdout.pipe(process.stdout)
-    proc.stderr.pipe(process.stderr)
-  else
+  unless opts.echo
     proc.stdout.on 'data', (s) -> stdout += s
     proc.stderr.on 'data', (s) -> stderr += s
 
@@ -54,10 +56,7 @@ bin = (cmd, args, opts) ->
 
   return def.promise
 
-debug = (cmd, args, opts) ->
-  args = ['debug', cmd].concat(args)
-  console.log "[DEBUG] node #{args.join(' ')}"
-  bin('node', args, opts)
+
 
 # Launch a binary installed by [npm](https://npmjs.org/). This will assume the
 # binary is available in `./node_modules/.bin/` and will flat-out fail if the
@@ -66,13 +65,9 @@ debug = (cmd, args, opts) ->
 node = (cmd, args, opts) ->
   bin(nodeBinary(cmd), args, opts)
 
-nodeDebug = (cmd, args, opts) ->
-  debug(nodeBinary(cmd), args, opts)
-
 
 module.exports =
   nodeBinary:   nodeBinary
   expandedEnv:  expandedEnv
   bin:          bin
   node:         node
-  nodeDebug:    nodeDebug
