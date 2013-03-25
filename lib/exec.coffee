@@ -22,7 +22,6 @@ expandedEnv = (paths=[], existing) ->
   _.extend env,
     NODE_PATH: newPaths.join(':')
 
-
 # Run a binary command from the path. The stdout and stderr of the forked
 # process will be "redirected" to the current process.
 bin = (cmd, args, opts) ->
@@ -55,8 +54,6 @@ bin = (cmd, args, opts) ->
     if exitCode is 0 then def.resolve(result) else def.reject(result)
 
   return def.promise
-
-
 
 # Launch a binary installed by [npm](https://npmjs.org/). This will assume the
 # binary is available in `./node_modules/.bin/` and will flat-out fail if the
