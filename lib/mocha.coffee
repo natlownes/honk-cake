@@ -62,9 +62,13 @@ all = (execOpts, root='./test/', reporter='spec') ->
 
   task 'test', 'Run all Mocha tests', (opts) ->
     test(files(opts), reporter=reporter, execOpts)
+      .fail (result) -> process.exit(result.exitCode)
+      .done (result) -> process.exit(result.exitCode)
 
   task 'test:debug', 'Run all Mocha tests with debugging enabled', (opts) ->
     debug(files(opts), reporter=reporter, execOpts)
+      .fail (result) -> process.exit(result.exitCode)
+      .done (result) -> process.exit(result.exitCode)
 
   task 'test:watch', 'Run all Mocha tests, watching for changes', (opts) ->
     watch(files(opts), execOpts)
