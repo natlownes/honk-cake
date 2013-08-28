@@ -13,7 +13,7 @@ exec = require './exec'
 # `./node_modules/.bin`. Std(in|out) will be piped to the parent process
 test = (files, reporter='spec', opts) ->
   args = [
-    '--compilers', 'coffee:coffee-script'
+    '--compilers', 'coffee:coffee-script',
     '--colors',
     '--recursive',
     '-R', reporter
@@ -28,7 +28,7 @@ test = (files, reporter='spec', opts) ->
 debug = (files, reporter='spec', opts) ->
   args = [
     'debug'
-    '--compilers', 'coffee:coffee-script'
+    '--compilers', 'coffee:coffee-script',
     '--colors',
     '--recursive',
     '-R', reporter
